@@ -58,11 +58,12 @@ def namespace(namespace, token: str = Depends(oauth_scheme)):
     payload = jwt.decode(token, JWT_KEY, algorithms=[JWT_ALGORITHM])
     if check_user_in_db(payload.get('username'), payload.get('password')):
         v1 = client.CoreV1Api()
-        for namespace in v1.list_namespace().items:
-            if namespace.metadata.name == namespace:
-                namespace = namespace
-        if namespace:
-            return JSONResponse(status_code=200, content={"message": "Describe Namespace", "data": jsonable_encoder(namespace.to_dict())})
+        result = None
+        for item in v1.list_namespace().items:
+            if item.metadata.name == namespace:
+                result = item
+        if result:
+            return JSONResponse(status_code=200, content={"message": "Describe Namespace", "data": jsonable_encoder(result.to_dict())})
         else:
             return JSONResponse(status_code=404, content={"message": "No namespace exists", "data": ""})
     else:
