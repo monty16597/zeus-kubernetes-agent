@@ -20,7 +20,7 @@ install-venv:
 	make setup-venv && test ! -e requirements.txt || ($(VENV_RUN); $(PIP_CMD) -q install -r requirements.txt)
 
 install-venv3:
-	make setup-venv-python3 && test ! -e requirements.txt || ($(VENV_RUN); $(PIP_CMD) -q install -r requirements.txt)
+	make setup-venv3 && test ! -e requirements.txt || ($(VENV_RUN); $(PIP_CMD) -q install -r requirements.txt)
 
 init:
 	(make install-venv)
@@ -29,7 +29,7 @@ init3:
 	(make install-venv3)
 
 run:
-	($(VENV_RUN); uvicorn main:app --reload)
+	($(VENV_RUN); uvicorn main:app --host 0.0.0.0 --reload)
 
 clean:
 	(make uninstall; test -d $(VENV_DIR) && rm -r $(VENV_DIR))

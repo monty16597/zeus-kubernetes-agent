@@ -9,4 +9,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: zeus-agent
-  namespace: zeus-agent
+  namespace: default
