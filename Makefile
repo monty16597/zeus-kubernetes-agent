@@ -50,4 +50,6 @@ docker-push:
 	docker push ${DOCKER_REPO_URL}/${DOCKER_REPO_NAME}:${DOCKER_REPO_IMAGE_TAG}
 
 docker-run:
-	docker run --name zeus-agent -p 8000:8000 -it ${DOCKER_REPO_URL}/${DOCKER_REPO_NAME}:${DOCKER_REPO_IMAGE_TAG}
+	(docker rm -f zeus-agent || echo "No containers exist. deploying one..."; \
+		docker run --name zeus-agent -p 8000:8000 -it ${DOCKER_REPO_URL}/${DOCKER_REPO_NAME}:${DOCKER_REPO_IMAGE_TAG}; \
+		docker rm -f zeus-agent)
