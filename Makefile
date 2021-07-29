@@ -1,6 +1,9 @@
 PIP_CMD ?= pip
 VENV_DIR ?= .venv
 DEPLOYMENT_DIR ?= ./deployment
+DOCKER_REPO_URL ?= "manjeetalonjaekzero"
+DOCKER_REPO_NAME ?= "pub"
+DOCKER_REPO_IMAGE_TAG ?= "zeus-agent"
 
 ifeq ($(OS), Windows_NT)
 	VENV_RUN = . $(VENV_DIR)/Scripts/activate
@@ -29,7 +32,7 @@ init3:
 	(make install-venv3)
 
 run:
-	($(VENV_RUN); uvicorn main:app --host 0.0.0.0 --reload)
+	($(VENV_RUN); uvicorn app.main:app --host 0.0.0.0 --reload)
 
 clean:
 	(make uninstall; test -d $(VENV_DIR) && rm -r $(VENV_DIR))
@@ -39,3 +42,12 @@ deploy:
 
 uninstall:
 	kubectl delete -f $(DEPLOYMENT_DIR)/.
+
+docker-build:
+	docker build -t ${DOCKER_REPO_URL}/${DOCKER_REPO_NAME}:${DOCKER_REPO_IMAGE_TAG} .
+
+docker-push:
+	docker push ${DOCKER_REPO_URL}/${DOCKER_REPO_NAME}:${DOCKER_REPO_IMAGE_TAG}
+
+docker-run:
+	docker run --name zeus-agent -p 8000:8000 -it ${DOCKER_REPO_URL}/${DOCKER_REPO_NAME}:${DOCKER_REPO_IMAGE_TAG}
