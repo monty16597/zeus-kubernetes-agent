@@ -55,4 +55,4 @@ docker-run:
 		docker rm -f zeus-agent)
 
 lint:
-	($(VENV_RUN); flake8 app/ --max-line-length 120 --exclude '**/__init__.py')
+	($(VENV_RUN); flake8 app/ --max-line-length 120 --exclude '**/__init__.py' --inline-quotes 'single')

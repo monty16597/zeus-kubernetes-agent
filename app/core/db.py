@@ -7,4 +7,4 @@ FakeDb = {
 
 
 def check_user_in_db(username, password):
-    return True if FakeDb.get(username) and FakeDb.get(username).get("password") == password else False
+    return True if FakeDb.get(username) and FakeDb.get(username).get('password') == password else False
