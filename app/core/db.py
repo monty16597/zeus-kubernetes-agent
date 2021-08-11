@@ -1,7 +1,7 @@
 from .config import ADMIN_USERNAME, ADMIN_PASSWORD
 
 FakeDb = {
-    'admin': {
+    ADMIN_USERNAME: {
         'username': ADMIN_USERNAME,
         'password': ADMIN_PASSWORD
     }
