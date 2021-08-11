@@ -24,8 +24,13 @@ spec:
         - containerPort: 8000
         # resources:
         #   limits:
+        #     cpu: 200m
+        #     memory: 500m
+        #   requests:
         #     cpu: 100m
         #     memory: 300m
-        #   requests:
-        #     cpu: 50m
-        #     memory: 200m
+        env:
+          - name: ADMIN_USERNAME
+            value: "admin"
+          - name: ADMIN_PASSWORD
+            value: "EQu8KsnFs9X9lJhuU7rFgz4gIFT7qtLy24eDoDCOLh65ElVOWtZTV8BMalBpCMEw"
