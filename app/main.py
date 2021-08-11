@@ -1,4 +1,4 @@
-from app.core import auth
+from app.core import auth, config
 from app.apis.v1 import namespace, pods, all
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
@@ -8,6 +8,8 @@ app = FastAPI(
     version='1.0.0',
 )
 
+print('--> Admin username and password as follows: \
+    \nusername: {}\npassword: {}\n---'.format(config.ADMIN_USERNAME, config.ADMIN_PASSWORD))
 app.include_router(auth.router)
 app.include_router(namespace.router)
 app.include_router(pods.router)

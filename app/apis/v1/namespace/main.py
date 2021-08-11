@@ -11,6 +11,7 @@ router = APIRouter(
 
 
 @router.get('/namespaces/')
+@router.get('/namespace/')
 async def namespaces():
     v1 = client.CoreV1Api()
     namespaces = [
@@ -35,6 +36,7 @@ async def namespaces():
 
 
 @router.get('/namespaces/{namespace}/')
+@router.get('/namespace/{namespace}/')
 def namespace(namespace):
     v1 = client.CoreV1Api()
     result = None
