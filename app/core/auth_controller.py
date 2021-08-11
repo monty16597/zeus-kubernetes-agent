@@ -1,13 +1,14 @@
 import jwt
 from .db import check_user_in_db
 from fastapi import HTTPException, Depends
+from .utils import get_jwt_expiry_time
 from .config import (
-    JWT_KEY, JWT_ALGORITHM, JWT_TOKEN_TYPE, JWT_TOKEN_EXPIRY, OAUTH_SCHEME)
+    JWT_KEY, JWT_ALGORITHM, JWT_TOKEN_TYPE, OAUTH_SCHEME)
 
 
 def encode_jwt_token(payload):
     return {
-        'access_token': jwt.encode({'exp': JWT_TOKEN_EXPIRY,
+        'access_token': jwt.encode({'exp': get_jwt_expiry_time(hours=1),
                                     'username': payload.username,
                                     'token_type': JWT_TOKEN_TYPE,
                                     'password': payload.password},
