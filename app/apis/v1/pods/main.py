@@ -18,15 +18,18 @@ def namespaced_pods(namespace):
     ]
     return JSONResponse(
         status_code=200,
-        content={'message': 'List of pods', 'data': jsonable_encoder(pods)}) \
+        content={'message': 'ListPod', 'data': jsonable_encoder(pods)}) \
         if pods else JSONResponse(
-            status_code=404, content={'message': 'No any pod exists', 'data': ''}
+            status_code=404, content={'message': 'NoPodExist', 'data': ''}
         )
 
 
-@router.get('/namespaces/{namespace}/pods/{pod}/')
+@router.get('/namespace/{namespace}/pod/{pod}/')
+@router.get('/namespace/{namespace}/pod/{pod}/')
 def namespaced_pod(namespace: str, pod: str):
     v1 = client.CoreV1Api()
-    pod = next(pods for pods in v1.list_namespaced_pod(namespace=namespace).items if pods.metadata.name == pod)
-    return JSONResponse(status_code=200, content={'message': 'Describe pod', 'data': jsonable_encoder(pod.to_dict())}) \
-        if pod else JSONResponse(status_code=404, content={'message': 'No any pod exists', 'data': ''})
+    pod = v1.read_namespaced_pod(namespace=namespace, name=pod).to_dict()
+    pod['metadata'].pop('managed_fields')
+    pod['metadata']['annotations'].pop('kubectl.kubernetes.io/last-applied-configuration', None)
+    return JSONResponse(status_code=200, content={'message': 'DescribePod', 'data': jsonable_encoder(pod)}) \
+        if pod else JSONResponse(status_code=404, content={'message': 'NoPodExist', 'data': ''})

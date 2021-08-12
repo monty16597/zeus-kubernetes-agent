@@ -17,22 +17,8 @@ async def namespaces():
     namespaces = [
         namespace.metadata.name for namespace in v1.list_namespace().items
     ]
-    if namespaces:
-        return JSONResponse(
-            status_code=200,
-            content={
-                'message': 'list of namespaces',
-                'data': jsonable_encoder(namespaces)
-            }
-        )
-    else:
-        return JSONResponse(
-            status_code=404,
-            content={
-                'message': 'No namespace exists',
-                'data': ''
-            }
-        )
+    return JSONResponse(status_code=200, content={'message': 'ListNamespace', 'data': jsonable_encoder(namespaces)}) \
+        if namespaces else JSONResponse(status_code=404, content={'message': 'NoNamespaceExist', 'data': ''})
 
 
 @router.get('/namespaces/{namespace}/')
@@ -40,22 +26,7 @@ async def namespaces():
 def namespace(namespace):
     v1 = client.CoreV1Api()
     result = None
-    for item in v1.list_namespace().items:
-        if item.metadata.name == namespace:
-            result = item
-    if result:
-        return JSONResponse(
-            status_code=200,
-            content={
-                'message': 'Describe Namespace',
-                'data': jsonable_encoder(result.to_dict())
-            }
-        )
-    else:
-        return JSONResponse(
-            status_code=404,
-            content={
-                'message': 'No namespace exists',
-                'data': ''
-            }
-        )
+    namespace =  v1.read_namespace(name=namespace).to_dict()
+    namespace['metadata'].pop('managed_fields', None)
+    return JSONResponse(status_code=200, content={'message': 'DescribeNamespace', 'data': jsonable_encoder(namespaces)}) \
+        if namespaces else JSONResponse(status_code=404, content={'message': 'NoNamespaceExist', 'data': ''})

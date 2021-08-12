@@ -33,6 +33,7 @@ def all_pod():
     pods = [
         {
             'name': pod.metadata.name,
+            'namespace': pod.metadata.namespace,
             'start_time': pod.status.start_time,
             'status': {
                 'restart': get_pod_restart_status(pod.status.container_statuses),
@@ -41,8 +42,8 @@ def all_pod():
         } for pod in pods.items
     ]
 
-    return JSONResponse(status_code=200, content={'message': 'All pods', 'data': jsonable_encoder(pods)}) \
-        if pods else JSONResponse(status_code=404, content={'message': 'No any pod exists', 'data': ''})
+    return JSONResponse(status_code=200, content={'message': 'AllPod', 'data': jsonable_encoder(pods)}) \
+        if pods else JSONResponse(status_code=404, content={'message': 'NoPodExist', 'data': ''})
 
 
 @router.get('/all/services/')
@@ -54,8 +55,8 @@ def all_svc():
     services = [
         service.metadata.name for service in services.items
     ]
-    return JSONResponse(status_code=200, content={'message': 'All services', 'data': jsonable_encoder(services)}) \
-        if services else JSONResponse(status_code=404, content={'message': 'No any service exists', 'data': ''})
+    return JSONResponse(status_code=200, content={'message': 'AllService', 'data': jsonable_encoder(services)}) \
+        if services else JSONResponse(status_code=404, content={'message': 'NoServiceExist', 'data': ''})
 
 
 @router.get('/all/pvcs/')
@@ -66,8 +67,8 @@ def all_pvc():
     pvcs = [
         pvc.metadata.name for pvc in pvcs.items
     ]
-    return JSONResponse(status_code=200, content={'message': 'All pvc', 'data': jsonable_encoder(pvcs)}) \
-        if pvcs else JSONResponse(status_code=404, content={'message': 'No any pvc exists', 'data': ''})
+    return JSONResponse(status_code=200, content={'message': 'AllPvc', 'data': jsonable_encoder(pvcs)}) \
+        if pvcs else JSONResponse(status_code=404, content={'message': 'NoPvcExist', 'data': ''})
 
 
 @router.get('/all/secrets/')
@@ -78,8 +79,8 @@ def all_secret():
     secrets = [
         secret.metadata.name for secret in secrets.items
     ]
-    return JSONResponse(status_code=200, content={'message': 'All secrets', 'data': jsonable_encoder(secrets)}) \
-        if secrets else JSONResponse(status_code=404, content={'message': 'No any secret exists', 'data': ''})
+    return JSONResponse(status_code=200, content={'message': 'AllSecret', 'data': jsonable_encoder(secrets)}) \
+        if secrets else JSONResponse(status_code=404, content={'message': 'NoSecretExist', 'data': ''})
 
 
 @router.get('/all/configmaps/')
@@ -91,8 +92,8 @@ def all_cm():
     cms = [
         cm.metadata.name for cm in cms.items
     ]
-    return JSONResponse(status_code=200, content={'message': 'All configmap', 'data': jsonable_encoder(cms)}) \
-        if cms else JSONResponse(status_code=404, content={'message': 'No any configmap exists', 'data': ''})
+    return JSONResponse(status_code=200, content={'message': 'AllConfigMap', 'data': jsonable_encoder(cms)}) \
+        if cms else JSONResponse(status_code=404, content={'message': 'NoConfigMapExist', 'data': ''})
 
 
 @router.get('/all/jobs/')
@@ -103,8 +104,8 @@ def all_job():
     jobs = [
         job.metadata.name for job in jobs.items
     ]
-    return JSONResponse(status_code=200, content={'message': 'All jobs', 'data': jsonable_encoder(jobs)}) \
-        if jobs else JSONResponse(status_code=404, content={'message': 'No any job exists', 'data': ''})
+    return JSONResponse(status_code=200, content={'message': 'AllJob', 'data': jsonable_encoder(jobs)}) \
+        if jobs else JSONResponse(status_code=404, content={'message': 'NoJobExist', 'data': ''})
 
 
 @router.get('/all/cronjobs/')
@@ -115,8 +116,8 @@ def all_cj():
     jobs = [
         job.metadata.name for job in jobs.items
     ]
-    return JSONResponse(status_code=200, content={'message': 'All cronjobs', 'data': jsonable_encoder(jobs)}) \
-        if jobs else JSONResponse(status_code=404, content={'message': 'No any cronjob exists', 'data': ''})
+    return JSONResponse(status_code=200, content={'message': 'AllCronJob', 'data': jsonable_encoder(jobs)}) \
+        if jobs else JSONResponse(status_code=404, content={'message': 'NoCronJobExist', 'data': ''})
 
 
 @router.get('/all/ingresses/')
@@ -127,5 +128,5 @@ def all_ingress():
     ingresses = list([
         ingress.metadata.name for ingress in data.items
     ])
-    return JSONResponse(status_code=200, content={'message': 'All ingress', 'data': jsonable_encoder(ingresses)}) \
-        if ingresses else JSONResponse(status_code=404, content={'message': 'No any ingress exists', 'data': ''})
+    return JSONResponse(status_code=200, content={'message': 'AllIngress', 'data': jsonable_encoder(ingresses)}) \
+        if ingresses else JSONResponse(status_code=404, content={'message': 'NoIngressExist', 'data': ''})
