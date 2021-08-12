@@ -1,8 +1,7 @@
 from kubernetes import client
 from fastapi import Depends, APIRouter
-from fastapi.responses import JSONResponse
-from fastapi.encoders import jsonable_encoder
 from app.core.auth_controller import decode_jwt_token
+from app.core.utils import return_json_resp
 
 router = APIRouter(
     tags=['apis', 'v1', 'namespace'],
@@ -17,16 +16,17 @@ async def namespaces():
     namespaces = [
         namespace.metadata.name for namespace in v1.list_namespace().items
     ]
-    return JSONResponse(status_code=200, content={'message': 'ListNamespace', 'data': jsonable_encoder(namespaces)}) \
-        if namespaces else JSONResponse(status_code=404, content={'message': 'NoNamespaceExist', 'data': ''})
+    return return_json_resp(data=namespaces, message='ListNamespace')
 
 
 @router.get('/namespaces/{namespace}/')
 @router.get('/namespace/{namespace}/')
 def namespace(namespace):
     v1 = client.CoreV1Api()
-    result = None
-    namespace =  v1.read_namespace(name=namespace).to_dict()
-    namespace['metadata'].pop('managed_fields', None)
-    return JSONResponse(status_code=200, content={'message': 'DescribeNamespace', 'data': jsonable_encoder(namespaces)}) \
-        if namespaces else JSONResponse(status_code=404, content={'message': 'NoNamespaceExist', 'data': ''})
+    try:
+        namespace = v1.read_namespace(name=namespace).to_dict()
+        namespace['metadata'].pop('managed_fields', None)
+    except Exception as e:
+        print('Error:', e)
+        namespace = None
+    return return_json_resp(data=namespace, message='DescribeNamespace')

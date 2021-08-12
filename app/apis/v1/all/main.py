@@ -1,27 +1,13 @@
+from app.core.utils import return_json_resp
 from kubernetes import client
 from fastapi import Depends, APIRouter
-from fastapi.responses import JSONResponse
-from fastapi.encoders import jsonable_encoder
 from app.core.auth_controller import decode_jwt_token
+from .utils import get_pod_restart_status, get_pod_status
 
 router = APIRouter(
     tags=['apis', 'v1', 'all'],
     dependencies=[Depends(decode_jwt_token)],
 )
-
-
-def get_pod_restart_status(container_statuses):
-    total_restart = 0
-    for container in container_statuses:
-        total_restart = container.restart_count + total_restart
-    return total_restart
-
-
-def get_pod_status(container_statuses):
-    for container in container_statuses:
-        if container.state.waiting:
-            return False, container.state.waiting.reason
-    return True, 'Running'
 
 
 @router.get('/all/pods/')
@@ -41,9 +27,7 @@ def all_pod():
             }
         } for pod in pods.items
     ]
-
-    return JSONResponse(status_code=200, content={'message': 'AllPod', 'data': jsonable_encoder(pods)}) \
-        if pods else JSONResponse(status_code=404, content={'message': 'NoPodExist', 'data': ''})
+    return return_json_resp(message='AllPod', data=pods)
 
 
 @router.get('/all/services/')
@@ -55,8 +39,7 @@ def all_svc():
     services = [
         service.metadata.name for service in services.items
     ]
-    return JSONResponse(status_code=200, content={'message': 'AllService', 'data': jsonable_encoder(services)}) \
-        if services else JSONResponse(status_code=404, content={'message': 'NoServiceExist', 'data': ''})
+    return return_json_resp(message='AllService', data=services)
 
 
 @router.get('/all/pvcs/')
@@ -67,8 +50,7 @@ def all_pvc():
     pvcs = [
         pvc.metadata.name for pvc in pvcs.items
     ]
-    return JSONResponse(status_code=200, content={'message': 'AllPvc', 'data': jsonable_encoder(pvcs)}) \
-        if pvcs else JSONResponse(status_code=404, content={'message': 'NoPvcExist', 'data': ''})
+    return return_json_resp(message='AllPvc', data=pvcs)
 
 
 @router.get('/all/secrets/')
@@ -79,8 +61,7 @@ def all_secret():
     secrets = [
         secret.metadata.name for secret in secrets.items
     ]
-    return JSONResponse(status_code=200, content={'message': 'AllSecret', 'data': jsonable_encoder(secrets)}) \
-        if secrets else JSONResponse(status_code=404, content={'message': 'NoSecretExist', 'data': ''})
+    return return_json_resp(message='AllSecret', data=secrets)
 
 
 @router.get('/all/configmaps/')
@@ -92,8 +73,7 @@ def all_cm():
     cms = [
         cm.metadata.name for cm in cms.items
     ]
-    return JSONResponse(status_code=200, content={'message': 'AllConfigMap', 'data': jsonable_encoder(cms)}) \
-        if cms else JSONResponse(status_code=404, content={'message': 'NoConfigMapExist', 'data': ''})
+    return return_json_resp(message='AllConfigMap', data=cms)
 
 
 @router.get('/all/jobs/')
@@ -104,8 +84,7 @@ def all_job():
     jobs = [
         job.metadata.name for job in jobs.items
     ]
-    return JSONResponse(status_code=200, content={'message': 'AllJob', 'data': jsonable_encoder(jobs)}) \
-        if jobs else JSONResponse(status_code=404, content={'message': 'NoJobExist', 'data': ''})
+    return return_json_resp(message='AllJob', data=jobs)
 
 
 @router.get('/all/cronjobs/')
@@ -116,8 +95,7 @@ def all_cj():
     jobs = [
         job.metadata.name for job in jobs.items
     ]
-    return JSONResponse(status_code=200, content={'message': 'AllCronJob', 'data': jsonable_encoder(jobs)}) \
-        if jobs else JSONResponse(status_code=404, content={'message': 'NoCronJobExist', 'data': ''})
+    return return_json_resp(message='AllCronJob', data=jobs)
 
 
 @router.get('/all/ingresses/')
@@ -128,5 +106,4 @@ def all_ingress():
     ingresses = list([
         ingress.metadata.name for ingress in data.items
     ])
-    return JSONResponse(status_code=200, content={'message': 'AllIngress', 'data': jsonable_encoder(ingresses)}) \
-        if ingresses else JSONResponse(status_code=404, content={'message': 'NoIngressExist', 'data': ''})
+    return return_json_resp(message='AllIngress', data=ingresses)
