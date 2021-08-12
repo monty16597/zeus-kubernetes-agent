@@ -51,7 +51,6 @@ def namespaced_pod_logs(
     """
     v1 = client.CoreV1Api()
     try:
-        print(pod_name)
         pod = v1.read_namespaced_pod(namespace=namespace, name=pod_name).to_dict()
         if container or len(pod['spec'].get('containers', [])) == 1:
             log = v1.read_namespaced_pod_log(
@@ -65,7 +64,6 @@ def namespaced_pod_logs(
         elif not container and len(pod['spec'].get('containers', [])) > 1:
             log = ''
             for container in pod['spec'].get('containers', []):
-                print('container', container.get('name'))
                 log = log + v1.read_namespaced_pod_log(
                     namespace=namespace,
                     name=pod_name,
